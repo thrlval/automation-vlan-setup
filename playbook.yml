@@ -1,0 +1,48 @@
+- name: Configure VLANs on switches
+  hosts: switches
+  gather_facts: false
+
+  tasks:
+    - name: Check connectivity to switches
+      ping:
+      register: ping_result
+
+    - name: Create VLANs
+      ios_config:
+        lines:
+          - vlan 10
+          - name Marketing
+          - vlan 20
+          - name IT
+          - vlan 30
+          - name HR
+        authorize: yes
+      when: ping_result.ping == "pong"
+
+    - name: Assign VLAN 10 to 3 interfaces
+      ios_config:
+        lines:
+          - interface range gig0/0-2
+          - switchport mode access
+          - switchport access vlan 10
+        authorize: yes
+
+    - name: Assign VLAN 20 to 3 interfaces
+      ios_config:
+        lines:
+          - interface range gig1/0-2
+          - switchport mode access
+          - switchport access vlan 20
+        authorize: yes
+
+    - name: Assign VLAN 30 to 3 interfaces
+      ios_config:
+        lines:
+          - interface range gig2/0-2
+          - switchport mode access
+          - switchport access vlan 30
+        authorize: yes
+
+    - name: Save configuration
+      ios_config:
+        save_when: always

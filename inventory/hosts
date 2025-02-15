@@ -1,0 +1,4 @@
+[switches]
+192.168.122.240 ansible_network_os=ios ansible_connection=network_cli
+192.168.122.241 ansible_network_os=ios ansible_connection=network_cli
+192.168.122.242 ansible_network_os=ios ansible_connection=network_cli
